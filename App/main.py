@@ -7,18 +7,21 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
 
-from App.database import init_db
+
+from App.database import init_db, get_migrate
 
 from App.controllers import (
     setup_jwt
 )
 
 from App.views import (
-    user_views
+    user_views,
+    api_views
 )
 
 views = [
-    user_views
+    user_views,
+    api_views
 ]
 
 def add_views(app, views):
@@ -50,13 +53,10 @@ def create_app(config={}):
     photos = UploadSet('photos', TEXT + DOCUMENTS + IMAGES)
     configure_uploads(app, photos)
     add_views(app, views)
+    init_db(app)
     setup_jwt(app)
     app.app_context().push()
     return app
 
 app = create_app()
-
-
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+migrate = get_migrate(app)
