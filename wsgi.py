@@ -3,6 +3,7 @@ from flask import Flask
 from flask.cli import with_appcontext
 
 from App.main import app, migrate
+from App.database import create_db
 from App.controllers import ( create_user, get_all_users_json )
 
 
